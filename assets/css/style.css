@@ -1,0 +1,24 @@
+:root {
+    --clr-background: #fff;
+    --clr-h1-h4: #fff;
+    --clr-h2-h3: #000;
+    --clr-btn: #6c757d;
+    --clr-search-btn: #0096c7;
+    --clr-btn-hover: #0096c7;
+    --clr-weather-card: #1d3557;
+    --clr-weather-card-text: #fff;
+}
+
+body {
+    font-family: 'Open Sans', sans-serif;
+    font-size: 16px;
+}
+
+.header-container {
+    color: var(--clr-h1-h4);
+    font-weight: bolder;
+    font-size: 40px;
+    background-image: linear-gradient(to right, #3260ba, #321e82);
+    text-align: center;
+    padding: 1.5rem 1.5rem;
+}
