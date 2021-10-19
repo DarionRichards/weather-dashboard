@@ -111,7 +111,7 @@ body {
 .container {
     border: 2px solid black;
     padding: 1rem;
-    margin-bottom: 1rem;
+    margin-bottom: 1.2rem;
 }
 
 .current-weather-container {
@@ -120,12 +120,64 @@ body {
     gap: 1.5rem;
 }
 
-@media screen and (max-width: 520px) {
+.daily-forecast-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.daily-forecast-container h3 {
+    font-size: 25px;
+    font-weight: 780;
+}
+
+.weather-cards {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    color: var(--clr-h1-h4);
+}
+
+.cards {
+    display: flex;
+    flex-direction: column;
+    background: var(--clr-weather-card);
+    gap: 2rem;
+    margin-right: 1rem;
+    padding: 1rem;
+}
+
+.last-card {
+    display: flex;
+    flex-direction: column;
+    background: var(--clr-weather-card);
+    gap: 2rem;
+    padding: 1rem;
+}
+
+@media screen and (max-width: 1023px) {
     .wrapper {
         flex-direction: column;
+    }
+    .container {
+        margin-top: 1rem;
+        margin-bottom: 0;
     }
     .aside-container {
         width: 100%;
         margin: 0;
+    }
+    .daily-forecast-container {
+        margin-top: 1rem;
+    }
+    .daily-forecast-container h3 {
+        text-align: center;
+    }
+    .weather-cards {
+        flex-direction: column;
+    }
+    .cards {
+        margin: 1rem 0;
+        padding: 1rem;
     }
 }
