@@ -3,13 +3,14 @@
     --clr-h1-h4: #fff;
     --clr-h2-h3: #000;
     --clr-btn: #6c757d;
-    --clr-search-btn: #0096c7;
-    --clr-btn-hover: #0096c7;
+    --clr-search-btn: #3260ba;
+    --clr-btn-hover: #3260ba;
     --clr-weather-card: #1d3557;
     --clr-weather-card-text: #fff;
 }
 
 body {
+    background: var(--clr-background);
     font-family: 'Open Sans', sans-serif;
     font-size: 16px;
 }
@@ -17,8 +18,75 @@ body {
 .header-container {
     color: var(--clr-h1-h4);
     font-weight: bolder;
-    font-size: 40px;
+    font-size: 2.5rem;
     background-image: linear-gradient(to right, #3260ba, #321e82);
     text-align: center;
     padding: 1.5rem 1.5rem;
+}
+
+.aside-container {
+    display: flex;
+    flex-direction: column;
+    float: left;
+    margin: 1rem;
+    gap: 1rem;
+}
+
+.form-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.form-container h2 {
+    font-weight: 790;
+    font-size: 1.5rem;
+}
+
+.form-container input {
+    padding: 0.5rem;
+    border: 1px solid black;
+    border-radius: 5px;
+    width: 18rem;
+}
+
+.submit-btn {
+    display: block;
+    border-radius: 5px;
+    font-size: 1rem;
+    padding: 0.5rem;
+    color: var(--clr-background);
+    background-color: var(--clr-search-btn);
+    opacity: 0.4;
+}
+
+.submit-btn:hover {
+    cursor: pointer;
+    color: var(--clr-background);
+    background-color: var(--clr-btn-hover);
+    opacity: 1;
+}
+
+.border {
+    border-top: 2px solid black;
+}
+
+.aside-btns {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    gap: 1rem;
+}
+
+.btn {
+    display: block;
+    border-radius: 5px;
+    font-size: 1rem;
+    padding: 0.5rem;
+}
+
+.btn:hover {
+    cursor: pointer;
+    color: var(--clr-background);
+    background-color: var(--clr-btn-hover);
 }
