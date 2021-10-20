@@ -1,3 +1,5 @@
+const mainContentWrapper = $('#main-content-wrapper')
+
 const mockData = {
     current: {
         name: "London",
@@ -46,15 +48,18 @@ const mockData = {
     ],
 };
 
-const onLoad = () => {
-    // get from ls
-    // render recent searches
+const renderCurrentWeather = (currentDay) => {
+    const currentWeatherContainer = `<section class="container current-weather-container">
+        <h2>${currentDay.current.name} | ${currentDay.current.date} | <img src="https://openweathermap.org/img/w/${currentDay.current.iconCode}.png"/></h2>
+        <p>Temp: ${currentDay.current.temperature}</p>
+        <p>Wind: ${currentDay.current.wind} MPH</p>
+        <p>Humidity: ${currentDay.current.humidity}%</p>
+        <p>UV Index: ${currentDay.current.uvi}</p>
+    </section>`
+
+    mainContentWrapper.append(currentWeatherContainer)
+
+
 }
 
-const showCity = () => {
-    console.log('show city')
-}
-
-$('#form-container').on('click', showCity)
-
-$(document).ready(onLoad)
+renderCurrentWeather(mockData);
