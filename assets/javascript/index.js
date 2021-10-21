@@ -48,18 +48,20 @@ const mockData = {
     ],
 };
 
-const renderCurrentWeather = (currentDay) => {
-    const currentWeatherContainer = `<section class="container current-weather-container">
-        <h2>${currentDay.current.name} | ${currentDay.current.date} | <img src="https://openweathermap.org/img/w/${currentDay.current.iconCode}.png"/></h2>
-        <p>Temp: ${currentDay.current.temperature}</p>
-        <p>Wind: ${currentDay.current.wind} MPH</p>
-        <p>Humidity: ${currentDay.current.humidity}%</p>
-        <p>UV Index: ${currentDay.current.uvi}</p>
+const renderCurrentWeather = currentWeather => {
+    const currentWeatherContainer = `
+    <section class="container current-weather-container">
+        <h2>${currentWeather.name} | ${currentWeather.date} | ${currentWeather.iconCode}</h2>
+        <p>Temp: ${currentWeather.temperature}&deg;</p>
+        <p>Wind: ${currentWeather.wind}MPH</p>
+        <p>Humidity: ${currentWeather.humidity}%</p>
+        <p>UV Index: ${currentWeather.uvi}</p>
     </section>`
-
     mainContentWrapper.append(currentWeatherContainer)
+};
 
+const renderWeatherCards = weatherData => {
+    renderCurrentWeather(weatherData.current)
+};
 
-}
-
-renderCurrentWeather(mockData);
+renderWeatherCards(mockData);
