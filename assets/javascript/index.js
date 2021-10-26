@@ -2,12 +2,23 @@ const currentWeatherContainer = $('#current-weather-container');
 
 const API_KEY = `7d9d6a42892e49768b347537bd606146`
 
-const getCurrentDate = () => {
-    let date = moment().format('MMMM Do YYYY');
-    return date
+const getFormattedDate = (unixTimeStamp, formatDate = 'MMMM Do YYYY') => {
+    return moment.unix(unixTimeStamp).format(formatDate);
 };
 
-const getWeatherData = async(cityName) => {
+const getCurrentData = (name, currentData) => {
+    return {
+        name: name,
+        temperature: currentData.current.temp,
+        wind: currentData.current.wind_speed,
+        humidity: currentData.current.humidity,
+        uvi: currentData.current.uvi,
+        date: getFormattedDate(currentData.current.dt),
+        iconCode: currentData.current.weather[0].icon,
+    }
+};
+
+const getWeatherData = async cityName => {
     const currentDataUrl = `https://api.openweathermap.org/data/2.5/weather?q=${cityName}&appid=${API_KEY}`;
     const currentDataResponse = await fetch(currentDataUrl);
     const currentData = await currentDataResponse.json();
@@ -21,48 +32,41 @@ const getWeatherData = async(cityName) => {
 
     const forecastDataResponse = await fetch(forecastDataUrl);
     const forecastData = await forecastDataResponse.json();
-    console.log(forecastData)
+
+    const current = getCurrentData(name, forecastData);
 
     return {
-        current: {
-            name: name,
-            temperature: forecastData.current.temp,
-            wind: forecastData.current.wind_speed,
-            humidity: forecastData.current.humidity,
-            uvi: forecastData.current.uvi,
-            date: getCurrentDate(),
-            iconCode: forecastData.current.weather[0].icon,
-        },
+        current: current,
         forecast: [{
-                date: "(3/30/2021)",
+                date: getFormattedDate(forecastData.daily[1].dt),
+                temperature: forecastData.daily.temp,
+                wind: 111.22,
+                humidity: 33,
+                iconCode: "04n",
+            },
+            {
+                date: getFormattedDate(forecastData.daily[2].dt),
                 temperature: 123.45,
                 wind: 111.22,
                 humidity: 33,
                 iconCode: "04n",
             },
             {
-                date: "(3/31/2021)",
+                date: getFormattedDate(forecastData.daily[3].dt),
                 temperature: 123.45,
                 wind: 111.22,
                 humidity: 33,
                 iconCode: "04n",
             },
             {
-                date: "(3/32/2021)",
+                date: getFormattedDate(forecastData.daily[4].dt),
                 temperature: 123.45,
                 wind: 111.22,
                 humidity: 33,
                 iconCode: "04n",
             },
             {
-                date: "(3/33/2021)",
-                temperature: 123.45,
-                wind: 111.22,
-                humidity: 33,
-                iconCode: "04n",
-            },
-            {
-                date: "(3/34/2021)",
+                date: getFormattedDate(forecastData.daily[5].dt),
                 temperature: 123.45,
                 wind: 111.22,
                 humidity: 33,
@@ -120,8 +124,7 @@ const renderWeatherCards = weatherData => {
 };
 
 const onLoad = async() => {
-    const weatherData = await getWeatherData("London")
-    getCurrentDate();
+    const weatherData = await getWeatherData("London");
     renderWeatherCards(weatherData);
 };
 
