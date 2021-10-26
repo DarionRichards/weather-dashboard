@@ -18,6 +18,20 @@ const getCurrentData = (name, currentData) => {
     }
 };
 
+const getForecastData = (forecastData) => {
+    const callback = (each) => {
+        console.log(each)
+        return {
+            date: getFormattedDate(each.dt),
+            temperature: each.temp.day,
+            wind: each.wind_speed,
+            humidity: each.humidity,
+            iconCode: each.weather[0].icon,
+        }
+    };
+    return forecastData.daily.slice(1, 6).map(callback)
+};
+
 const getWeatherData = async cityName => {
     const currentDataUrl = `https://api.openweathermap.org/data/2.5/weather?q=${cityName}&appid=${API_KEY}`;
     const currentDataResponse = await fetch(currentDataUrl);
@@ -34,45 +48,11 @@ const getWeatherData = async cityName => {
     const forecastData = await forecastDataResponse.json();
 
     const current = getCurrentData(name, forecastData);
+    const forecast = getForecastData(forecastData)
 
     return {
         current: current,
-        forecast: [{
-                date: getFormattedDate(forecastData.daily[1].dt),
-                temperature: forecastData.daily.temp,
-                wind: 111.22,
-                humidity: 33,
-                iconCode: "04n",
-            },
-            {
-                date: getFormattedDate(forecastData.daily[2].dt),
-                temperature: 123.45,
-                wind: 111.22,
-                humidity: 33,
-                iconCode: "04n",
-            },
-            {
-                date: getFormattedDate(forecastData.daily[3].dt),
-                temperature: 123.45,
-                wind: 111.22,
-                humidity: 33,
-                iconCode: "04n",
-            },
-            {
-                date: getFormattedDate(forecastData.daily[4].dt),
-                temperature: 123.45,
-                wind: 111.22,
-                humidity: 33,
-                iconCode: "04n",
-            },
-            {
-                date: getFormattedDate(forecastData.daily[5].dt),
-                temperature: 123.45,
-                wind: 111.22,
-                humidity: 33,
-                iconCode: "04n",
-            },
-        ],
+        forecast: forecast
     }
 };
 
