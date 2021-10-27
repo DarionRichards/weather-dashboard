@@ -19,8 +19,8 @@
             <aside class="aside-container">
                 <form class="form-container" id="form-container">
                     <h2>Search for a city:</h2>
-                    <input placeholder="Please enter a city...">
-                    <button type="submit" class="submit-btn" id="submit-btn">Submit</button>
+                    <input id="search-input" type="search" placeholder="Please enter a city...">
+                    <button class="submit-btn" id="submit-btn" type="submit">Submit</button>
                 </form>
                 <div class="border"></div>
                 <section class="aside-btns">
@@ -35,8 +35,8 @@
                 </section>
             </aside>
             <section class="main-content-wrapper" id="main-content-wrapper">
-                <section class="container current-weather-container" id="current-weather-container"></section>
-                <section class="daily-forecast-container" id="daily-forecast-container"></section>
+                <div id="weather-container">
+                </div>
             </section>
     </main>
 

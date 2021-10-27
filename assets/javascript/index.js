@@ -1,6 +1,6 @@
-const currentWeatherContainer = $('#current-weather-container');
+const weatherContainer = $('#weather-container');
 
-const API_KEY = `7d9d6a42892e49768b347537bd606146`
+const API_KEY = `7d9d6a42892e49768b347537bd606146`;
 
 const getFormattedDate = (unixTimeStamp, formatDate = 'MMMM Do YYYY') => {
     return moment.unix(unixTimeStamp).format(formatDate);
@@ -20,7 +20,6 @@ const getCurrentData = (name, currentData) => {
 
 const getForecastData = (forecastData) => {
     const callback = (each) => {
-        console.log(each)
         return {
             date: getFormattedDate(each.dt),
             temperature: each.temp.day,
@@ -36,7 +35,6 @@ const getWeatherData = async cityName => {
     const currentDataUrl = `https://api.openweathermap.org/data/2.5/weather?q=${cityName}&appid=${API_KEY}`;
     const currentDataResponse = await fetch(currentDataUrl);
     const currentData = await currentDataResponse.json();
-    console.log(currentData);
 
     const lat = currentData.coord.lat;
     const lon = currentData.coord.lon;
@@ -56,7 +54,17 @@ const getWeatherData = async cityName => {
     }
 };
 
+const renderCurrentWeatherContainer = () => {
+    const currentWeatherContainer = `<section class="container current-weather-container" id="current-weather-container"></section>`;
+    weatherContainer.append(currentWeatherContainer);
+};
+
+
 const renderCurrentWeather = currentWeather => {
+    renderCurrentWeatherContainer();
+
+    const currentWeatherContainer = $('#current-weather-container');
+
     const currentWeatherCard = `<h2>${currentWeather.name} | ${currentWeather.date} | <img src="https://openweathermap.org/img/w/${currentWeather.iconCode}.png"/></h2>
         <p>Temp: ${currentWeather.temperature} &degF;</p>
         <p>Wind: ${currentWeather.wind}MPH</p>
@@ -67,6 +75,9 @@ const renderCurrentWeather = currentWeather => {
 };
 
 const renderForecastCardsContainer = () => {
+
+    const constructForecastContainer = `<section class="daily-forecast-container" id="daily-forecast-container"></section>`;
+    weatherContainer.append(constructForecastContainer)
 
     const forecastContainer = $('#daily-forecast-container');
 
@@ -103,9 +114,18 @@ const renderWeatherCards = weatherData => {
     renderForecastCards(weatherData.forecast)
 };
 
-const onLoad = async() => {
-    const weatherData = await getWeatherData("London");
-    renderWeatherCards(weatherData);
+const handleSearch = async(event) => {
+    event.preventDefault();
+
+    const cityName = $('#search-input').val();
+
+    if (cityName) {
+        const weatherData = await getWeatherData(cityName);
+
+        weatherContainer.empty();
+
+        renderWeatherCards(weatherData);
+    }
 };
 
-$(document).ready(onLoad)
+$('#form-container').on("submit", handleSearch)
