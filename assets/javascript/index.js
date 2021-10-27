@@ -1,8 +1,8 @@
-const weatherContainer = $('#weather-container');
+const weatherContainer = $("#weather-container");
 
 const API_KEY = `7d9d6a42892e49768b347537bd606146`;
 
-const getFormattedDate = (unixTimeStamp, formatDate = 'MMMM Do YYYY') => {
+const getFormattedDate = (unixTimeStamp, formatDate = "MMMM Do YYYY") => {
     return moment.unix(unixTimeStamp).format(formatDate);
 };
 
@@ -15,7 +15,7 @@ const getCurrentData = (name, currentData) => {
         uvi: currentData.current.uvi,
         date: getFormattedDate(currentData.current.dt),
         iconCode: currentData.current.weather[0].icon,
-    }
+    };
 };
 
 const getForecastData = (forecastData) => {
@@ -26,12 +26,12 @@ const getForecastData = (forecastData) => {
             wind: each.wind_speed,
             humidity: each.humidity,
             iconCode: each.weather[0].icon,
-        }
+        };
     };
-    return forecastData.daily.slice(1, 6).map(callback)
+    return forecastData.daily.slice(1, 6).map(callback);
 };
 
-const getWeatherData = async cityName => {
+const getWeatherData = async(cityName) => {
     const currentDataUrl = `https://api.openweathermap.org/data/2.5/weather?q=${cityName}&appid=${API_KEY}`;
     const currentDataResponse = await fetch(currentDataUrl);
     const currentData = await currentDataResponse.json();
@@ -46,11 +46,22 @@ const getWeatherData = async cityName => {
     const forecastData = await forecastDataResponse.json();
 
     const current = getCurrentData(name, forecastData);
-    const forecast = getForecastData(forecastData)
+    const forecast = getForecastData(forecastData);
 
     return {
         current: current,
-        forecast: forecast
+        forecast: forecast,
+    };
+};
+
+const setCitiesInLS = (cityName) => {
+    const cities = JSON.parse(localStorage.getItem("recentCities")) ?
+        JSON.parse(localStorage.getItem("recentCities")) :
+        [];
+
+    if (!cities.includes(cityName)) {
+        cities.push(cityName);
+        localStorage.setItem("recentCities", JSON.stringify(cities));
     }
 };
 
@@ -59,11 +70,10 @@ const renderCurrentWeatherContainer = () => {
     weatherContainer.append(currentWeatherContainer);
 };
 
-
-const renderCurrentWeather = currentWeather => {
+const renderCurrentWeather = (currentWeather) => {
     renderCurrentWeatherContainer();
 
-    const currentWeatherContainer = $('#current-weather-container');
+    const currentWeatherContainer = $("#current-weather-container");
 
     const currentWeatherCard = `<h2>${currentWeather.name} | ${currentWeather.date} | <img src="https://openweathermap.org/img/w/${currentWeather.iconCode}.png"/></h2>
         <p>Temp: ${currentWeather.temperature} &degF;</p>
@@ -75,11 +85,10 @@ const renderCurrentWeather = currentWeather => {
 };
 
 const renderForecastCardsContainer = () => {
-
     const constructForecastContainer = `<section class="daily-forecast-container" id="daily-forecast-container"></section>`;
-    weatherContainer.append(constructForecastContainer)
+    weatherContainer.append(constructForecastContainer);
 
-    const forecastContainer = $('#daily-forecast-container');
+    const forecastContainer = $("#daily-forecast-container");
 
     const forecastHeader = `<h3>5-day Forecast:</h3>`;
     forecastContainer.append(forecastHeader);
@@ -88,36 +97,52 @@ const renderForecastCardsContainer = () => {
     forecastContainer.append(constructCardsContainer);
 };
 
-const renderForecastCards = forecastData => {
-
+const renderForecastCards = (forecastData) => {
     renderForecastCardsContainer();
 
-    const constructCard = forecastDay => {
-
+    const constructCard = (forecastDay) => {
         return `<div class="cards">
             <h4>${forecastDay.date}</h4>
             <i><img src="https://openweathermap.org/img/w/${forecastDay.iconCode}.png"/></i>
             <p>Temp: ${forecastDay.temperature} &degF</p>
             <p>Wind: ${forecastDay.wind} MPH</p>
             <p>Humidity: ${forecastDay.humidity}</p>
-        </div>`
+        </div>`;
     };
 
-    const cardsContainer = $('#cards-container');
+    const cardsContainer = $("#cards-container");
 
     const forecastCard = forecastData.map(constructCard);
-    cardsContainer.append(forecastCard)
+    cardsContainer.append(forecastCard);
 };
 
-const renderWeatherCards = weatherData => {
-    renderCurrentWeather(weatherData.current)
-    renderForecastCards(weatherData.forecast)
+const renderWeatherCards = (weatherData) => {
+    renderCurrentWeather(weatherData.current);
+    renderForecastCards(weatherData.forecast);
+};
+
+const renderRecentCities = () => {
+    const cities = JSON.parse(localStorage.getItem("recentCities")) ?
+        JSON.parse(localStorage.getItem("recentCities")) :
+        [];
+
+    const cityContainer = $("#city-container");
+
+    cityContainer.empty();
+
+    const constructCityButton = (city) => {
+        const button = `<button class="btn">${city}</button>`;
+
+        cityContainer.append(button);
+    };
+
+    cities.forEach(constructCityButton);
 };
 
 const handleSearch = async(event) => {
     event.preventDefault();
 
-    const cityName = $('#search-input').val();
+    const cityName = $("#search-input").val();
 
     if (cityName) {
         const weatherData = await getWeatherData(cityName);
@@ -125,7 +150,11 @@ const handleSearch = async(event) => {
         weatherContainer.empty();
 
         renderWeatherCards(weatherData);
+
+        setCitiesInLS(cityName);
+
+        renderRecentCities();
     }
 };
 
-$('#form-container').on("submit", handleSearch)
+$("#form-container").on("submit", handleSearch);
