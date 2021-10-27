@@ -54,10 +54,16 @@ const getWeatherData = async(cityName) => {
     };
 };
 
-const setCitiesInLS = (cityName) => {
+const getFromLS = () => {
     const cities = JSON.parse(localStorage.getItem("recentCities")) ?
         JSON.parse(localStorage.getItem("recentCities")) :
         [];
+
+    return cities;
+};
+
+const setCitiesInLS = (cityName) => {
+    const cities = getFromLS();
 
     if (!cities.includes(cityName)) {
         cities.push(cityName);
@@ -122,9 +128,7 @@ const renderWeatherCards = (weatherData) => {
 };
 
 const renderRecentCities = () => {
-    const cities = JSON.parse(localStorage.getItem("recentCities")) ?
-        JSON.parse(localStorage.getItem("recentCities")) :
-        [];
+    const cities = getFromLS();
 
     const cityContainer = $("#city-container");
 
@@ -139,17 +143,21 @@ const renderRecentCities = () => {
     cities.forEach(constructCityButton);
 };
 
+const renderWeatherInfo = async(cityName) => {
+    const weatherData = await getWeatherData(cityName);
+
+    weatherContainer.empty();
+
+    renderWeatherCards(weatherData);
+};
+
 const handleSearch = async(event) => {
     event.preventDefault();
 
     const cityName = $("#search-input").val();
 
     if (cityName) {
-        const weatherData = await getWeatherData(cityName);
-
-        weatherContainer.empty();
-
-        renderWeatherCards(weatherData);
+        renderWeatherInfo(cityName);
 
         setCitiesInLS(cityName);
 
@@ -157,4 +165,17 @@ const handleSearch = async(event) => {
     }
 };
 
+const handleReady = () => {
+    renderRecentCities();
+
+    const cities = getFromLS();
+
+    if (cities.length) {
+        const cityName = cities.pop();
+        renderWeatherInfo(cityName);
+    }
+};
+
 $("#form-container").on("submit", handleSearch);
+
+$(document).ready(handleReady);
