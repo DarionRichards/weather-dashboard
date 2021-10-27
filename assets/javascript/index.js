@@ -135,10 +135,22 @@ const renderRecentCities = () => {
     cityContainer.empty();
 
     const constructCityButton = (city) => {
-        const button = `<button class="btn">${city}</button>`;
+        const button = `<button class="btn" data-city=${city}>${city}</button>`;
 
         cityContainer.append(button);
     };
+
+    const handleClick = (event) => {
+        const target = $(event.target);
+
+        if (target.is("button")) {
+            const cityName = target.data("city");
+
+            renderWeatherInfo(cityName);
+        }
+    };
+
+    cityContainer.on("click", handleClick);
 
     cities.forEach(constructCityButton);
 };
